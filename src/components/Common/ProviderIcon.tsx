@@ -6,6 +6,7 @@ import { LMStudioIcon } from "../Icons/LMStudio"
 import { OpenAiIcon } from "../Icons/OpenAI"
 import { TogtherMonoIcon } from "../Icons/Togther"
 import { OpenRouterIcon } from "../Icons/OpenRouter"
+import { OrcaRouterIcon } from "../Icons/OrcaRouter"
 import { LLamaFile } from "../Icons/Llamafile"
 import { GeminiIcon } from "../Icons/GeminiIcon"
 import { MistarlIcon } from "../Icons/Mistral"
@@ -27,6 +28,7 @@ import { AnthropicIcon } from "../Icons/AnthropicIcon"
 import { AtlasCloudIcon } from "../Icons/AtlasCloud"
 import { BigModelZhipuIcon } from "../Icons/BigModelZhipuIcon"
 import { ZAiIcon } from "../Icons/ZAiIcon"
+import { UnoRouterIcon } from "../Icons/UnoRouterIcon"
 import { CanopyWaveIcon } from "../Icons/CanopyWaveIcon"
 import { MiniMaxIcon } from "../Icons/MiniMaxIcon"
 import { XiaomiMimoIcon } from "../Icons/XiaomiMimo"
@@ -58,6 +60,8 @@ export const ProviderIcons = ({
       return <TogtherMonoIcon className={className} />
     case "openrouter":
       return <OpenRouterIcon className={className} />
+    case "orcarouter":
+      return <OrcaRouterIcon className={className} />
     case "llamafile":
       return <LLamaFile className={className} />
     case "gemini":
@@ -102,6 +106,8 @@ export const ProviderIcons = ({
       return <BigModelZhipuIcon className={className} />
     case 'zai':
       return <ZAiIcon className={className} />
+    case 'unorouter':
+      return <UnoRouterIcon className={className} />
     case 'minimax':
       return <MiniMaxIcon className={className} />
     case 'xiaomimimo':
