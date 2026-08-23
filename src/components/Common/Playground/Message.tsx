@@ -34,6 +34,7 @@ import {
   PlaygroundToolInvocation
 } from "./message-groups"
 import { McpInvocationBlock } from "./McpInvocationBlock"
+import { SelectionReplyArea } from "./SelectionReplyArea"
 
 // `contain-intrinsic-size: auto` is applied to *every* message, including the
 // active one, so the browser records its real rendered height. When a message
@@ -367,7 +368,8 @@ const PlaygroundMessageComponent = (props: Props) => {
           <div className="flex flex-grow flex-col gap-4">
             {!editMode ? (
               props.isBot ? (
-                props.segments && props.segments.length > 0 ? (
+                <SelectionReplyArea className="flex flex-col gap-4">
+                {props.segments && props.segments.length > 0 ? (
                   props.segments.map((segment) => {
                     if (segment.type === "text") {
                       return (
@@ -408,7 +410,8 @@ const PlaygroundMessageComponent = (props: Props) => {
                     reasoningTimeTaken: props.reasoningTimeTaken,
                     t
                   })
-                )
+                )}
+                </SelectionReplyArea>
               ) : (
                 <p
                   className={`prose whitespace-pre-line text-sm prose-p:leading-relaxed prose-pre:p-0 dark:prose-invert dark:prose-dark ${
