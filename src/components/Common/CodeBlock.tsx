@@ -7,7 +7,7 @@ import {
   EyeIcon,
   CodeIcon
 } from "lucide-react"
-import { FC, useState, useRef, useEffect, useCallback } from "react"
+import { FC, memo, useState, useRef, useEffect, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { coldarkDark } from "react-syntax-highlighter/dist/cjs/styles/prism"
@@ -18,7 +18,7 @@ interface Props {
   value: string
 }
 
-export const CodeBlock: FC<Props> = ({ language, value }) => {
+const CodeBlockComponent: FC<Props> = ({ language, value }) => {
   const [isBtnPressed, setIsBtnPressed] = useState(false)
   const [previewValue, setPreviewValue] = useState(value)
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -234,3 +234,7 @@ export const CodeBlock: FC<Props> = ({ language, value }) => {
     </>
   )
 }
+
+// Memoized so that already-closed code blocks are not re-highlighted on
+// every streamed chunk of the surrounding message.
+export const CodeBlock = memo(CodeBlockComponent)

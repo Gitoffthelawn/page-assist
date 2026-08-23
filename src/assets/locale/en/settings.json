@@ -65,6 +65,9 @@
       "hideChatScrollbar": {
         "label": "Hide Chat Scrollbar"
       },
+      "enableQuoteReply": {
+        "label": "Reply to Selected Text in Assistant Messages"
+      },
       "autoCopyResponseToClipboard": {
         "label": "Automatically Copy Response to Clipboard"
       },
