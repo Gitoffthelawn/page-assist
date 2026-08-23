@@ -41,6 +41,9 @@ import { useThinkingCapability } from "@/hooks/useThinkingCapability"
 import { useStoreChatModelSettings } from "~/store/model"
 import { useMessageQueue } from "@/hooks/useMessageQueue"
 import { QueuedMessagesList } from "@/components/Common/QueuedMessagesList"
+import { QuotedReplyChip } from "@/components/Common/Playground/QuotedReplyChip"
+import { useQuoteReply } from "@/store/quote"
+import { formatQuotedReply } from "@/utils/quote-reply"
 import { McpServerToggle } from "@/components/Common/McpServerToggle"
 type Props = {
   dropedFile: File | undefined
@@ -400,6 +403,15 @@ export const PlaygroundForm = ({ dropedFile }: Props) => {
     }
   }, [useCompactActions])
 
+  const quotedText = useQuoteReply((state) => state.quotedText)
+  const clearQuotedText = useQuoteReply((state) => state.clearQuotedText)
+
+  React.useEffect(() => {
+    if (quotedText) {
+      textAreaFocus()
+    }
+  }, [quotedText])
+
   const sendFormValue = async (value: {
     message: string
     image: string
@@ -407,6 +419,7 @@ export const PlaygroundForm = ({ dropedFile }: Props) => {
   }) => {
     if (
       value.message.trim().length === 0 &&
+      !quotedText &&
       (!value.images || value.images.length === 0) &&
       selectedDocuments.length === 0 &&
       uploadedFiles.length === 0
@@ -419,8 +432,11 @@ export const PlaygroundForm = ({ dropedFile }: Props) => {
       return
     }
 
+    const outgoingMessage = formatQuotedReply(quotedText, value.message)
+
     form.reset()
     clearSelectedDocuments()
+    clearQuotedText()
     clearUploadedFiles()
     if (persistChatInput) {
       setPersistedMessage("")
@@ -430,7 +446,7 @@ export const PlaygroundForm = ({ dropedFile }: Props) => {
     await sendMessage({
       image: value.images && value.images.length > 0 ? value.images[0] : "",
       images: value.images,
-      message: value.message.trim(),
+      message: outgoingMessage,
       docs: selectedDocuments.map((doc) => ({
         type: "tab",
         tabId: doc.id,
@@ -450,10 +466,11 @@ export const PlaygroundForm = ({ dropedFile }: Props) => {
 
     if (enableMessageQueue && isSending) {
       const enqueued = enqueueMessage({
-        message: value.message,
+        message: formatQuotedReply(quotedText, value.message),
         images: value.images || []
       })
       if (enqueued) {
+        clearQuotedText()
         form.setFieldValue("message", "")
         form.setFieldValue("images", [])
         if (persistChatInput) {
@@ -667,6 +684,7 @@ export const PlaygroundForm = ({ dropedFile }: Props) => {
                 />
               </div>
             )}
+            <QuotedReplyChip />
             {form.values.images && form.values.images.length > 0 && (
               <div className="p-3 border-b border-gray-200 dark:border-[#404040]">
                 <div className="flex flex-wrap gap-2">

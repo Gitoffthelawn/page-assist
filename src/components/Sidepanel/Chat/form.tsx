@@ -42,6 +42,9 @@ import { useStoreChatModelSettings } from "~/store/model"
 import { getVariable } from "@/utils/select-variable"
 import { useMessageQueue } from "@/hooks/useMessageQueue"
 import { QueuedMessagesList } from "@/components/Common/QueuedMessagesList"
+import { QuotedReplyChip } from "@/components/Common/Playground/QuotedReplyChip"
+import { useQuoteReply } from "@/store/quote"
+import { formatQuotedReply } from "@/utils/quote-reply"
 import { McpServerToggle } from "@/components/Common/McpServerToggle"
 import { useTabMentions } from "~/hooks/useTabMentions"
 import { MentionsDropdown } from "@/components/Option/Playground/MentionsDropdown"
@@ -355,6 +358,15 @@ export const SidepanelForm = ({ dropedFile }: Props) => {
     }
   }, [useCompactActions])
 
+  const quotedText = useQuoteReply((state) => state.quotedText)
+  const clearQuotedText = useQuoteReply((state) => state.clearQuotedText)
+
+  React.useEffect(() => {
+    if (quotedText) {
+      textAreaFocus()
+    }
+  }, [quotedText])
+
   const sendFormValue = async (value: {
     message: string
     image: string
@@ -362,6 +374,7 @@ export const SidepanelForm = ({ dropedFile }: Props) => {
   }) => {
     if (
       value.message.trim().length === 0 &&
+      !quotedText &&
       (!value.images || value.images.length === 0) &&
       selectedDocuments.length === 0
     ) {
@@ -373,8 +386,11 @@ export const SidepanelForm = ({ dropedFile }: Props) => {
       return
     }
 
+    const outgoingMessage = formatQuotedReply(quotedText, value.message)
+
     form.reset()
     clearSelectedDocuments()
+    clearQuotedText()
     if (persistChatInput) {
       setPersistedMessage("")
     }
@@ -383,7 +399,7 @@ export const SidepanelForm = ({ dropedFile }: Props) => {
     await sendMessage({
       image: value.images && value.images.length > 0 ? value.images[0] : "",
       images: value.images,
-      message: value.message.trim(),
+      message: outgoingMessage,
       docs: selectedDocuments.map((doc) => ({
         type: "tab",
         tabId: doc.id,
@@ -403,10 +419,11 @@ export const SidepanelForm = ({ dropedFile }: Props) => {
 
     if (enableMessageQueue && streaming) {
       const enqueued = enqueueMessage({
-        message: value.message,
+        message: formatQuotedReply(quotedText, value.message),
         images: value.images || []
       })
       if (enqueued) {
+        clearQuotedText()
         form.setFieldValue("message", "")
         form.setFieldValue("images", [])
         if (persistChatInput) {
@@ -646,6 +663,7 @@ export const SidepanelForm = ({ dropedFile }: Props) => {
                 />
               </div>
             )}
+            <QuotedReplyChip />
             {form.values.images && form.values.images.length > 0 && (
               <div className="p-2 border-b border-gray-200 dark:border-[#404040]">
                 <div className="flex flex-wrap gap-2">

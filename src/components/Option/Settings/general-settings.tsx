@@ -22,6 +22,11 @@ export const GeneralSettings = () => {
     false
   )
 
+  const [enableQuoteReply, setEnableQuoteReply] = useStorage(
+    "enableQuoteReply",
+    true
+  )
+
   const [defaultCopilotPrompt, setDefaultCopilotPrompt] = useStorage(
     "defaultCopilotPrompt",
     undefined
@@ -756,6 +761,22 @@ export const GeneralSettings = () => {
         <Switch
           checked={hideChatScrollbar}
           onChange={(checked) => setHideChatScrollbar(checked)}
+        />
+      </div>
+
+      <div className="flex flex-row justify-between">
+        <div className="inline-flex items-center gap-2">
+          <span className="text-gray-700   dark:text-neutral-50">
+            {t(
+              "generalSettings.settings.enableQuoteReply.label",
+              "Reply to Selected Text in Assistant Messages"
+            )}
+          </span>
+        </div>
+
+        <Switch
+          checked={enableQuoteReply}
+          onChange={(checked) => setEnableQuoteReply(checked)}
         />
       </div>
 

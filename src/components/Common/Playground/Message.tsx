@@ -34,10 +34,21 @@ import {
   PlaygroundToolInvocation
 } from "./message-groups"
 import { McpInvocationBlock } from "./McpInvocationBlock"
+import { SelectionReplyArea } from "./SelectionReplyArea"
+
+// `contain-intrinsic-size: auto` is applied to *every* message, including the
+// active one, so the browser records its real rendered height. When a message
+// later stops being the last one and gets `content-visibility: auto`, Chrome
+// lays it out as skipped for a frame — without a remembered size that frame
+// uses the 220px fallback, the scroll height collapses and the view jumps up
+// (then back down once auto-scroll catches up).
+const activeMessageRenderStyle: React.CSSProperties = {
+  containIntrinsicSize: "auto 220px"
+}
 
 const messageRenderStyle: React.CSSProperties = {
   contentVisibility: "auto",
-  containIntrinsicSize: "220px"
+  containIntrinsicSize: "auto 220px"
 }
 
 type Props = {
@@ -179,7 +190,7 @@ const McpInvocationGroup = ({
     {content.trim().length > 0 && (
       <div className="space-y-3">
         {renderAssistantText({
-          keyPrefix: `tool-content-${content.length}`,
+          keyPrefix: "tool-content",
           message: content,
           isStreaming,
           openReasoning,
@@ -292,7 +303,7 @@ const PlaygroundMessageComponent = (props: Props) => {
       className={`group relative flex w-full max-w-3xl flex-col items-end justify-center pb-2 text-gray-800 dark:text-gray-100 md:px-4 lg:w-4/5 ${checkWideMode ? "max-w-none" : ""}`}
       style={
         props.isLastMessage || props.isStreaming || props.isProcessing
-          ? undefined
+          ? activeMessageRenderStyle
           : messageRenderStyle
       }>
       <div className="m-auto my-2 flex w-full flex-row gap-4 md:gap-6">
@@ -357,7 +368,8 @@ const PlaygroundMessageComponent = (props: Props) => {
           <div className="flex flex-grow flex-col gap-4">
             {!editMode ? (
               props.isBot ? (
-                props.segments && props.segments.length > 0 ? (
+                <SelectionReplyArea className="flex flex-col gap-4">
+                {props.segments && props.segments.length > 0 ? (
                   props.segments.map((segment) => {
                     if (segment.type === "text") {
                       return (
@@ -398,7 +410,8 @@ const PlaygroundMessageComponent = (props: Props) => {
                     reasoningTimeTaken: props.reasoningTimeTaken,
                     t
                   })
-                )
+                )}
+                </SelectionReplyArea>
               ) : (
                 <p
                   className={`prose whitespace-pre-line text-sm prose-p:leading-relaxed prose-pre:p-0 dark:prose-invert dark:prose-dark ${
