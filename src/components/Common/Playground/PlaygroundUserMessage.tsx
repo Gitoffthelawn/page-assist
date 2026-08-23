@@ -12,9 +12,15 @@ import { DocumentFile } from "./DocumentFile"
 import { tagColors } from "@/utils/color"
 import { formatMessageTimestamp } from "@/utils/format-timestamp"
 
+// See Message.tsx: `auto` lets the browser remember the real rendered height
+// so toggling content-visibility never collapses the scroll height for a frame.
+const activeMessageRenderStyle: React.CSSProperties = {
+  containIntrinsicSize: "auto 180px"
+}
+
 const messageRenderStyle: React.CSSProperties = {
   contentVisibility: "auto",
-  containIntrinsicSize: "180px"
+  containIntrinsicSize: "auto 180px"
 }
 
 type Props = {
@@ -66,7 +72,7 @@ export const PlaygroundUserMessageBubble: React.FC<Props> = (props) => {
       className={`group gap-2 relative flex w-full max-w-3xl flex-col items-end justify-center pb-2 md:px-4 lg:w-4/5 text-[#242424] dark:text-gray-100 ${checkWideMode ? "max-w-none" : ""}`}
       style={
         props.isLastMessage || props.isStreaming || props.isProcessing
-          ? undefined
+          ? activeMessageRenderStyle
           : messageRenderStyle
       }>
       {!editMode && props?.message_type && props?.message_type !== "normal" ? (
