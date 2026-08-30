@@ -23,6 +23,7 @@ import { getAllPrompts } from "@/db/dexie/helpers"
 import { ProviderIcons } from "../Common/ProviderIcon"
 import { NewChat } from "./NewChat"
 import { MoreOptions } from "./MoreOptions"
+import { useUiDirection } from "~/hooks/useUiDirection"
 type Props = {
   setSidebarOpen: (open: boolean) => void
   setOpenModelSettings: (open: boolean) => void
@@ -34,8 +35,8 @@ export const Header: React.FC<Props> = ({
   setSidebarOpen,
   saveTemporaryChat
 }) => {
-  const { t, i18n } = useTranslation(["option", "common"])
-  const isRTL = i18n?.dir() === "rtl"
+  const { t } = useTranslation(["option", "common"])
+  const { isRTL } = useUiDirection()
 
   const [shareModeEnabled] = useStorage("shareMode", false)
   const [hideCurrentChatModelSettings] = useStorage(
