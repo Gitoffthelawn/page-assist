@@ -629,7 +629,7 @@ export const PlaygroundForm = ({ dropedFile }: Props) => {
           <div
             data-istemporary-chat={temporaryChat}
             data-checkwidemode={checkWideMode}
-            className={` bg-neutral-50/70  dark:bg-[#2a2a2a]/70 relative w-full max-w-[48rem] p-1 backdrop-blur-3xl duration-100 border border-gray-300 rounded-t-xl  dark:border-[#404040] data-[istemporary-chat='true']:bg-violet-100/70 data-[istemporary-chat='true']:border-violet-300 data-[istemporary-chat='true']:dark:bg-black/70 data-[istemporary-chat='true']:dark:border-[#404040] data-[checkwidemode='true']:max-w-none`}>
+            className={` bg-neutral-50/70  dark:bg-[#2a2a2a] relative w-full max-w-[48rem] p-1 backdrop-blur-3xl dark:backdrop-blur-none duration-100 border border-gray-300 rounded-t-xl  dark:border-[#404040] data-[istemporary-chat='true']:bg-violet-100/70 data-[istemporary-chat='true']:border-violet-300 data-[istemporary-chat='true']:dark:bg-black data-[istemporary-chat='true']:dark:border-[#404040] data-[checkwidemode='true']:max-w-none`}>
             {enableMessageQueue &&
               optimizeQueueForSmallScreen &&
               hasQueuedMessages && (
