@@ -11,6 +11,9 @@
         "label": "Language",
         "placeholder": "Select a language"
       },
+      "forceRTL": {
+        "label": "Always Use RTL Layout"
+      },
       "darkMode": {
         "label": "Change Theme",
         "options": {
